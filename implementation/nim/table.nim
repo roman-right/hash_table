@@ -26,28 +26,30 @@ proc addValue(self: LinkedListNode, key: int, value: string ) {.exportpy.} =
     addValue(self.next, key, value)
 
 proc getNode(self: LinkedListNode, key: int): LinkedListNode =
-  if self.key == key:
+  if self.is_empty:
+    raise newException(KeyError, "No such key found 1")
+  elif self.key == key:
     return self
   elif self.next.isNil:
-    raise newException(KeyError, "No such key found")
+    raise newException(KeyError, "No such key found 2")
   else:
-    return self
+    return getNode(self.next, key)
 
 proc getValue(self: LinkedListNode, key: int): string  {.exportpy.} =
   return getNode(self, key).value
 
 proc removeValue(self: LinkedListNode, key: int) {.exportpy.} =
   var found_node: LinkedListNode = getNode(self, key)
-  if found_node.next.isNil:
+  if found_node.next == nil:
     if found_node.prev.isNil:
       found_node.isEmpty = true
     else:
       found_node.prev.next = nil
   else:
     if found_node.prev.isNil:
-      found_node.next = found_node.next.next
       found_node.key = found_node.next.key
       found_node.value = found_node.next.value
+      found_node.next = found_node.next.next
     else:
       found_node.prev.next = found_node.next
       found_node.next.prev = found_node.prev

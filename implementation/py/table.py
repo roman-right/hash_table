@@ -1,16 +1,18 @@
-from typing import Any, List
+from typing import Any
 
 from implementation.py.base import BaseHashTable
-from implementation.py.node import LinkedListNode
+from implementation.py.bst_node import BSTNode
+from implementation.py.linked_list_node import LinkedListNode
 
 
-class HashTable(BaseHashTable):
+class LLHashTable(BaseHashTable):
+    node_class = LinkedListNode
+
     def __init__(self, size: int = 8, max_load_factor: float = 1):
         self.size = size
         self.load = 0
         self.max_load_factor = max_load_factor
-        self.array: List[LinkedListNode] = [LinkedListNode() for _ in
-                                            range(self.size)]
+        self.array = [self.node_class() for _ in range(self.size)]
 
     @property
     def load_factor(self):
@@ -38,8 +40,8 @@ class HashTable(BaseHashTable):
         self.load -= 1
 
     def _resize(self):
-        new_table = HashTable(size=self.size * 2,
-                              max_load_factor=self.max_load_factor)
+        new_table = LLHashTable(size=self.size * 2,
+                                max_load_factor=self.max_load_factor)
         for node in self.array:
             if not node.is_empty:
                 for element in node:
@@ -48,3 +50,7 @@ class HashTable(BaseHashTable):
         self.size = new_table.size
         self.load = new_table.load
         self.array = new_table.array
+
+
+class BSTHashTable(LLHashTable):
+    node_class = BSTNode
