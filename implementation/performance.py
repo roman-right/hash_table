@@ -4,7 +4,7 @@ from typing import Type
 
 from implementation.nim.nim_table import NimTable
 from implementation.py.base import BaseHashTable
-from implementation.py.table import LLHashTable, BSTHashTable
+from implementation.py.hash_table import LLHashTable, BSTHashTable
 
 SIZE = 1000000
 
@@ -22,7 +22,7 @@ def measure_performance(table_type: Type[BaseHashTable]):
     keys, values = generate_data()
     start = perf_counter()
 
-    ht = table_type(max_load_factor=100, size=20000)
+    ht = table_type(max_load_factor=0.5, size=20000)
 
     for i, key in enumerate(keys):
         ht[key] = values[i]

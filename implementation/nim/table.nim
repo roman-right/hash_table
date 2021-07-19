@@ -71,7 +71,7 @@ proc newTable(size: int, max_load_factor: float): HashTable {.exportpy.} =
     result.array[i] = new_node
 
 proc hash(self: HashTable, key: int): int =
-  return key mod self.size
+  return cast[int]((key * 2654435761) mod self.size)
 
 proc setItemInternal(self: HashTable, key: int, value: string) =
   var node_index: int = hash(self, key)

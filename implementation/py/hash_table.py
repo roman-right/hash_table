@@ -21,7 +21,7 @@ class LLHashTable(BaseHashTable):
     def _hash(self, key: int):
         if not isinstance(key, int):
             raise TypeError("key must be of type int")
-        return key % self.size
+        return key * 2654435761 % self.size
 
     def __setitem__(self, key: int, value: Any):
         node_index = self._hash(key)
