@@ -21,16 +21,12 @@ class BaseNode:
 
 class BaseHashTable:
     @abstractmethod
-    def __init__(self, size):
+    def __init__(self, size, max_load_factor):
         ...
 
     @property
     @abstractmethod
     def load_factor(self):
-        ...
-
-    @abstractmethod
-    def _hash(self, key):
         ...
 
     @abstractmethod

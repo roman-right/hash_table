@@ -1,7 +1,7 @@
 from typing import Any, List
 
-from implementation.base import BaseHashTable
-from implementation.node import LinkedListNode
+from implementation.py.base import BaseHashTable
+from implementation.py.node import LinkedListNode
 
 
 class HashTable(BaseHashTable):
@@ -17,11 +17,11 @@ class HashTable(BaseHashTable):
         return self.load / self.size
 
     def _hash(self, key: int):
+        if not isinstance(key, int):
+            raise TypeError("key must be of type int")
         return key % self.size
 
     def __setitem__(self, key: int, value: Any):
-        if not isinstance(key, int):
-            raise TypeError("key must be of type int")
         node_index = self._hash(key)
         self.array[node_index].add_value(key, value)
         self.load += 1
