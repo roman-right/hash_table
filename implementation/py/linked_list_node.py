@@ -1,3 +1,5 @@
+from typing import Any
+
 from implementation.py.base import BaseNode
 
 
@@ -9,7 +11,7 @@ class LinkedListNode(BaseNode):
         self.next = None
         self.is_empty = True
 
-    def add_value(self, key, value):
+    def add_value(self, key: Any, value: Any) -> "LinkedListNode":
         if self.is_empty:
             self.key = key
             self.value = value
@@ -25,7 +27,7 @@ class LinkedListNode(BaseNode):
             self.next.prev = self
         return self.next.add_value(key, value)
 
-    def get_node(self, key):
+    def get_node(self, key: Any) -> "LinkedListNode":
         if self.is_empty:
             raise KeyError
 
@@ -37,7 +39,7 @@ class LinkedListNode(BaseNode):
 
         return self.next.get_node(key)
 
-    def remove_value(self, key):
+    def remove_value(self, key: Any) -> None:
         node = self.get_node(key)
         if node.next is not None:
             if node.prev is not None:
@@ -56,7 +58,7 @@ class LinkedListNode(BaseNode):
                 node.key = None
                 node.is_empty = None
 
-    def get_value(self, key):
+    def get_value(self, key: Any) -> Any:
         return self.get_node(key).value
 
     def __iter__(self):

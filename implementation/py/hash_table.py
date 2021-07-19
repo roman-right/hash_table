@@ -18,28 +18,28 @@ class LLHashTable(BaseHashTable):
     def load_factor(self):
         return self.load / self.size
 
-    def _hash(self, key: int):
+    def _hash(self, key: int) -> int:
         if not isinstance(key, int):
             raise TypeError("key must be of type int")
         return key * 2654435761 % self.size
 
-    def __setitem__(self, key: int, value: Any):
+    def __setitem__(self, key: int, value: Any) -> None:
         node_index = self._hash(key)
         self.array[node_index].add_value(key, value)
         self.load += 1
         if self.load_factor >= self.max_load_factor:
             self._resize()
 
-    def __getitem__(self, item):
-        node_index = self._hash(item)
-        return self.array[node_index].get_value(item)
+    def __getitem__(self, key: int) -> "LinkedListNode":
+        node_index = self._hash(key)
+        return self.array[node_index].get_value(key)
 
-    def __delitem__(self, key):
+    def __delitem__(self, key: int) -> None:
         node_index = self._hash(key)
         self.array[node_index].remove_value(key)
         self.load -= 1
 
-    def _resize(self):
+    def _resize(self) -> None:
         new_table = LLHashTable(size=self.size * 2,
                                 max_load_factor=self.max_load_factor)
         for node in self.array:
