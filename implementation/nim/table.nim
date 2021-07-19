@@ -27,11 +27,11 @@ proc addValue(self: LinkedListNode, key: int, value: string ) {.exportpy.} =
 
 proc getNode(self: LinkedListNode, key: int): LinkedListNode =
   if self.is_empty:
-    raise newException(KeyError, "No such key found 1")
+    raise newException(KeyError, "No such key found")
   elif self.key == key:
     return self
   elif self.next.isNil:
-    raise newException(KeyError, "No such key found 2")
+    raise newException(KeyError, "No such key found")
   else:
     return getNode(self.next, key)
 
