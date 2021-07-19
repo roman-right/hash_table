@@ -22,12 +22,13 @@ def measure_performance(table_type: Type[BaseHashTable]):
     keys, values = generate_data()
     start = perf_counter()
 
-    ht = table_type(max_load_factor=0.5, size=20000)
+    ht = table_type(max_load_factor=10, size=20000)
 
     for i, key in enumerate(keys):
         ht[key] = values[i]
     insert_finished = perf_counter()
     for i, key in enumerate(keys):
+        # assert ht[key] == values[i]
         ht[key]
     read_finished = perf_counter()
 

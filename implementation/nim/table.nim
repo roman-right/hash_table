@@ -4,17 +4,17 @@ type LinkedListNode = ref object of PyNimObjectExperimental
   key: int
   value: string
   prev, next: LinkedListNode
-  is_empty: bool
+  isEmpty: bool
 
 proc newNode(): LinkedListNode =
   new(result)
   result.is_empty = true
 
 proc addValue(self: LinkedListNode, key: int, value: string ) {.exportpy.} =
-  if self.is_empty:
+  if self.isEmpty:
     self.key = key
     self.value = value
-    self.is_empty = false
+    self.isEmpty = false
 
   elif self.key == key:
     self.value = value
@@ -26,7 +26,7 @@ proc addValue(self: LinkedListNode, key: int, value: string ) {.exportpy.} =
     addValue(self.next, key, value)
 
 proc getNode(self: LinkedListNode, key: int): LinkedListNode =
-  if self.is_empty:
+  if self.isEmpty:
     raise newException(KeyError, "No such key found")
   elif self.key == key:
     return self
@@ -39,50 +39,50 @@ proc getValue(self: LinkedListNode, key: int): string  {.exportpy.} =
   return getNode(self, key).value
 
 proc removeValue(self: LinkedListNode, key: int) {.exportpy.} =
-  var found_node: LinkedListNode = getNode(self, key)
-  if found_node.next == nil:
-    if found_node.prev.isNil:
-      found_node.isEmpty = true
+  var node: LinkedListNode = getNode(self, key)
+  if node.next == nil:
+    if node.prev.isNil:
+      node.isEmpty = true
     else:
-      found_node.prev.next = nil
+      node.prev.next = nil
   else:
-    if found_node.prev.isNil:
-      found_node.key = found_node.next.key
-      found_node.value = found_node.next.value
-      found_node.next = found_node.next.next
+    if node.prev.isNil:
+      node.key = node.next.key
+      node.value = node.next.value
+      node.next = node.next.next
     else:
-      found_node.prev.next = found_node.next
-      found_node.next.prev = found_node.prev
+      node.prev.next = node.next
+      node.next.prev = node.prev
 
 type HashTable = ref object of PyNimObjectExperimental
   size: int
   load: int
-  max_load_factor: float
+  maxLoadFactor: float
   array: seq[LinkedListNode]
 
-proc newTable(size: int, max_load_factor: float): HashTable {.exportpy.} =
+proc newTable(size: int, maxLoadFactor: float): HashTable {.exportpy.} =
   new(result)
   result.size = size
   result.load = 0
-  result.max_load_factor = max_load_factor
+  result.maxLoadFactor = maxLoadFactor
   result.array = newSeq[LinkedListNode](size)
   for i in 0..size-1:
-    var new_node: LinkedListNode = newNode()
-    result.array[i] = new_node
+    var newNode: LinkedListNode = newNode()
+    result.array[i] = newNode
 
 proc hash(self: HashTable, key: int): int =
   return cast[int]((key * 2654435761) mod self.size)
 
 proc setItemInternal(self: HashTable, key: int, value: string) =
-  var node_index: int = hash(self, key)
-  addValue(self.array[node_index], key, value)
+  var nodeIndex: int = hash(self, key)
+  addValue(self.array[nodeIndex], key, value)
   self.load += 1
 
 proc resizeTable(self: HashTable) =
   var newTable: HashTable = newTable(size=self.size * 2,
-                                      max_load_factor=self.max_load_factor)
+                                      maxLoadFactor=self.maxLoadFactor)
   for node in self.array:
-    if not node.is_empty:
+    if not node.isEmpty:
       var element = node
       while not element.isNil:
         setItemInternal(newTable, element.key, element.value)
@@ -97,7 +97,7 @@ proc loadFactor(self: HashTable): float {.exportpy.} =
 
 proc setItem(self: HashTable, key: int, value: string) {.exportpy.} =
   setItemInternal(self, key, value)
-  if self.load_factor >= self.max_load_factor:
+  if loadFactor(self) >= self.maxLoadFactor:
     resizeTable(self)
 
 proc getItem(self: HashTable, key: int): string {.exportpy.} =

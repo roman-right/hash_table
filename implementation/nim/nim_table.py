@@ -6,7 +6,7 @@ from implementation.py.base import BaseHashTable
 
 class NimTable(BaseHashTable):
     def __init__(self, size: int = 8, max_load_factor: float = 1):
-        self.table = table.newTable(size=size, max_load_factor=max_load_factor)
+        self.table = table.newTable(size=size, maxLoadFactor=max_load_factor)
 
     @property
     def load_factor(self):
